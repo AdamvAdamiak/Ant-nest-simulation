@@ -1,5 +1,6 @@
 import random
 import math
+import numpy as np
 
 
 class food:
@@ -7,8 +8,8 @@ class food:
         self.food_places = []
         self.n = n
         for i in range(n):
-            x = random.randint(12, 64)
-            y = random.randint(12, 64)
+            x = random.randint(12, 24)
+            y = random.randint(12, 24)
             self.food_places.append(food_object(x, y))
 
     def take_from(self, x, y):
@@ -30,9 +31,11 @@ class food:
         distances = []
         for i in range(self.n):
             food_obj = self.food_places[i]
-            a = (x, y)
-            b = (food_obj.x_food, food_obj.y_food)
-            distances.append(math.dist(a, b))
+            ant_cords = (x, y)
+            food_cords = (food_obj.x_food, food_obj.y_food)
+            if food_obj.stock == 0:
+                continue
+            distances.append(math.dist(ant_cords, food_cords))
 
         clossest = min(distances)
         index = distances.index(clossest)
@@ -40,8 +43,17 @@ class food:
         clossest_food_obj = self.food_places[index]
         clossest_x = clossest_food_obj.x_food
         clossest_y = clossest_food_obj.y_food
-
         return clossest_x, clossest_y
+
+    def get_graph_data(self):
+        x = []
+        y = []
+        stock = []
+        for food_obj in self.food_places:
+            x.append(food_obj.x_food)
+            y.append(food_obj.y_food)
+            stock.append(food_obj.stock)
+        return x, y, stock
 
 
 class food_object:
@@ -49,6 +61,3 @@ class food_object:
         self.x_food = x
         self.y_food = y
         self.stock = random.randint(5, 50)
-
-
-food_worker = food(5)
