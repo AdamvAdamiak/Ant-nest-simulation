@@ -8,8 +8,8 @@ class food:
         self.food_places = []
         self.n = n
         for i in range(n):
-            x = random.randint(16, 128)
-            y = random.randint(16, 128)
+            x = random.randint(-30, 30)
+            y = random.randint(-30, 30)
             self.food_places.append(food_object(x, y))
 
     def take_from(self, x, y):

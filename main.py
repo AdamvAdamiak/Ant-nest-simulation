@@ -7,9 +7,9 @@ import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
-FOOD_VAL = 10
+FOOD_VAL = 3
 NEST_FOOD = 25
-ANT_AMMOUNT = 500
+ANT_AMMOUNT = 50
 
 G = nx.Graph()
 color_map = []
@@ -91,8 +91,10 @@ nest_worker = nest(NEST_FOOD, ANT_AMMOUNT)
 ants = create_ants()
 
 
-# for i in range(150):
+# for i in range(1000):
 #     # print(nest_worker.food_stock,nest_worker.ant_ammount)
+#     previous_food_data = food_worker.get_graph_data()
+
 #     for ant in ants:
 #         try:
 #             ant.Update()
@@ -100,6 +102,9 @@ ants = create_ants()
 #             break
 #         if nest_worker.food_stock < 0:
 #             nest_worker.food_stock = 0
+
+#     next_food_data = food_worker.get_graph_data()
+    
 # draw_result()
 
 def update(frame):
