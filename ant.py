@@ -1,7 +1,5 @@
 import random
 import math
-from nest import nest_worker
-from food import food_worker
 
 
 class Ant:
@@ -10,21 +8,39 @@ class Ant:
         self.nest = nest
         self.x = 0
         self.y = 0
-        self.speed = 4
-        self.detect_food_radius = 25
+        self.speed = 2
+        self.detect_food_radius = 5
         self.isLeavingNest = role
         self.hasFood = False
         self.FoodAmmount = 0
+        self.DeathTimer = 10
+        self.isDead = False
 
     def Update(self):
+
+        if self.isDead == True:
+            return 'dead'
+
         if self.isLeavingNest == False:
-            self.nest.food_stock -= 1
-            return 0
+           self.check_for_staying_ant()
 
         if self.hasFood == False:
             self.search_food()
         else:
+            if self.FoodAmmount > 0:
+                self.FoodAmmount -= 0.01
             self.return_to_nest()
+
+    def check_for_staying_ant(self):
+        if self.nest.food_stock <= 0:
+            self.DeathTimer -= 1
+        else:
+            self.nest.food_stock -= 0.01
+            self.DeathTimer = 10
+        if self.DeathTimer == 0:
+            self.isDead = True
+            return 'dead'
+        return 'alive'
 
     def search_food(self):
         x_food, y_food = self.food.clossest_food(self.x, self.y)
@@ -63,14 +79,17 @@ class Ant:
             self.x = new_x
             self.y = new_y
 
-            print(' x: ', self.x, ' y: ', self.y, ' dist: ',
-                  math.dist(ant_cords, food_cords))
+            # print(' x: ', self.x, ' y: ', self.y, ' dist: ',
+            #       math.dist(ant_cords, food_cords))
+
+            return 'alive'
         else:
             # Jeśli nie wyczuje jedzenia ide w losowym kierunku
             self.x += random.randint(0, self.speed)
             self.y += random.randint(0, self.speed)
-            print(' x: ', self.x, ' y: ', self.y, ' dist: ',
-                  math.dist(ant_cords, food_cords))
+            return 'alive'
+            # print(' x: ', self.x, ' y: ', self.y, ' dist: ',
+            #       math.dist(ant_cords, food_cords))
 
     def grab_food(self, x_food, y_food):
         taken_food = self.food.take_from(x_food, y_food)
@@ -97,13 +116,16 @@ class Ant:
             self.FoodAmmount = 0
             self.hasFood = False
 
-        print(' x: ', self.x, ' y: ', self.y, ' food: ', self.nest.food_stock)
+        # print(' x: ', self.x, ' y: ', self.y, ' food: ', self.nest.food_stock)
 
 
-f = food_worker
-n = nest_worker
-ant = Ant(True, n, f)
+# f = food_worker
+# n = nest_worker
+# ant = Ant(True, n, f)
+# ant2 = Ant(False,n,f)
 
-
-for i in range(500):
-    ant.Update()
+# food_worker.show()
+# for i in range(500):
+#     ant.Update()
+#     ant2.Update()
+# food_worker.show()
