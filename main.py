@@ -1,3 +1,4 @@
+from math import exp
 from networkx.algorithms.bipartite.basic import color
 from ant import Ant
 from food import food
@@ -5,13 +6,15 @@ from nest import nest
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
-FOOD_VAL = 5
-NEST_FOOD = 5
-ANT_AMMOUNT = 46
+from matplotlib.animation import FuncAnimation
+FOOD_VAL = 10
+NEST_FOOD = 25
+ANT_AMMOUNT = 500
 
 G = nx.Graph()
 color_map = []
 size = []
+
 
 def draw_food_sources():
 
@@ -27,15 +30,12 @@ def draw_food_sources():
         color_map.append('orange')
         size.append(3000)
 
-    # nx.draw(G,nx.get_node_attributes(G,'pos'),with_labels=True,node_size=3000,node_color=color_map)
-    # plt.show()
-
 
 def draw_nest():
-    G.add_node('Nest', pos=(0, 0))
+    name = 'Nest' + '\n' + 'Stock: ' + str(round(nest_worker.food_stock,2))
+    G.add_node(name, pos=(0, 0))
     color_map.append('blue')
     size.append(3000)
-
 
 
 def draw_graph():
@@ -43,20 +43,25 @@ def draw_graph():
             node_size=size, node_color=color_map)
     plt.show()
 
+
 def draw_ants(ants):
     for i in range(len(ants)):
         ant = ants[i]
         name = 'a' + str(i)
         if ant.isLeavingNest == True:
-            G.add_node(name,pos=(ant.x,ant.y))
-            color_map.append('green')
+            G.add_node(name, pos=(ant.x, ant.y))
+            if ant.isDead == True:
+                color_map.append('red')
+            else:
+                color_map.append('green')
             size.append(200)
+
 
 def draw_result():
     global G
     global color_map
     global size
-    
+
     G = nx.Graph()
     color_map = []
     size = []
@@ -65,29 +70,49 @@ def draw_result():
     draw_ants(ants)
     draw_graph()
 
+
+def create_ants():
+    ants = []
+    leaving_ants = []
+    nest_ants = []
+
+    for i in range(int(0.6*ANT_AMMOUNT)):
+        leaving_ants.append(Ant(True, nest_worker, food_worker))
+
+    for i in range(int(0.4*ANT_AMMOUNT)):
+        nest_ants.append(Ant(False, nest_worker, food_worker))
+
+    ants = leaving_ants + nest_ants
+    return ants
+
+
 food_worker = food(FOOD_VAL)
 nest_worker = nest(NEST_FOOD, ANT_AMMOUNT)
-
-ants = []
-leaving_ants = []
-nest_ants = []
+ants = create_ants()
 
 
-for i in range(int(0.6*ANT_AMMOUNT)):
-    leaving_ants.append(Ant(True, nest_worker, food_worker))
+# for i in range(150):
+#     # print(nest_worker.food_stock,nest_worker.ant_ammount)
+#     for ant in ants:
+#         try:
+#             ant.Update()
+#         except TypeError:
+#             break
+#         if nest_worker.food_stock < 0:
+#             nest_worker.food_stock = 0
+# draw_result()
 
-for i in range(int(0.4*ANT_AMMOUNT)):
-    nest_ants.append(Ant(False, nest_worker, food_worker))
-
-ants = leaving_ants + nest_ants
-
-
-for i in range(500):
-    # print(nest_worker.food_stock,nest_worker.ant_ammount)
+def update(frame):
     for ant in ants:
-        state = ant.Update()
+        try:
+            ant.Update()
+        except TypeError:
+            break
         if nest_worker.food_stock < 0:
             nest_worker.food_stock = 0
+    plt.cla()
     draw_result()
 
+ani = FuncAnimation(plt.gcf(),update)
 
+plt.show()

@@ -8,8 +8,8 @@ class food:
         self.food_places = []
         self.n = n
         for i in range(n):
-            x = random.randint(12, 24)
-            y = random.randint(12, 24)
+            x = random.randint(16, 128)
+            y = random.randint(16, 128)
             self.food_places.append(food_object(x, y))
 
     def take_from(self, x, y):
@@ -29,17 +29,22 @@ class food:
 
     def clossest_food(self, x, y):
         distances = []
-        for i in range(self.n):
-            food_obj = self.food_places[i]
+        for food_obj in self.food_places:
             ant_cords = (x, y)
             food_cords = (food_obj.x_food, food_obj.y_food)
-            if food_obj.stock == 0:
-                continue
-            distances.append(math.dist(ant_cords, food_cords))
-
-        clossest = min(distances)
+            # if int(food_obj.stock) == int(0):
+            #     food_obj.isEmpty = True
+            
+            # if food_obj.isEmpty:
+            #     continue
+            
+            if food_obj.stock > 0:
+                distances.append(math.dist(ant_cords, food_cords))
+        try:
+            clossest = min(distances)
+        except ValueError:
+            return 0,0
         index = distances.index(clossest)
-
         clossest_food_obj = self.food_places[index]
         clossest_x = clossest_food_obj.x_food
         clossest_y = clossest_food_obj.y_food
@@ -56,8 +61,15 @@ class food:
         return x, y, stock
 
 
+    def stock_sum(self):
+        a = 0
+        for food_obj in self.food_places:
+            a += food_obj.stock
+        return a
+
 class food_object:
     def __init__(self, x, y):
         self.x_food = x
         self.y_food = y
         self.stock = random.randint(5, 50)
+        self.isEmpty = False

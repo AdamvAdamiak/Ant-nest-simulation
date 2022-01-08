@@ -9,7 +9,7 @@ class Ant:
         self.x = 0
         self.y = 0
         self.speed = 2
-        self.detect_food_radius = 5
+        self.detect_food_radius = 30
         self.isLeavingNest = role
         self.hasFood = False
         self.FoodAmmount = 0
@@ -17,6 +17,9 @@ class Ant:
         self.isDead = False
 
     def Update(self):
+        
+        if random.randint(0,10000) < 5:
+            self.isDead = True
 
         if self.isDead == True:
             return 'dead'
@@ -58,12 +61,12 @@ class Ant:
                 if new_x < x_food:
                     new_x = self.x + random.randint(0, self.speed)
                 else:
-                    new_x = x_food
+                    new_x = self.x - random.randint(0, self.speed)
 
                 if new_y < y_food:
                     new_y = self.y + random.randint(0, self.speed)
                 else:
-                    new_y = y_food
+                    new_y = self.y - random.randint(0, self.speed)
 
                 ant_cords = (new_x, new_y)
 
