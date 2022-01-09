@@ -2,7 +2,6 @@ import random
 import math
 import numpy as np
 
-
 class food:
     def __init__(self, n):
         self.food_places = []
@@ -33,17 +32,11 @@ class food:
             ant_cords = (x, y)
             food_cords = (food_obj.x_food, food_obj.y_food)
             # if int(food_obj.stock) == int(0):
-            #     food_obj.isEmpty = True
-            
-            # if food_obj.isEmpty:
             #     continue
-            
             if food_obj.stock > 0:
                 distances.append(math.dist(ant_cords, food_cords))
-        try:
-            clossest = min(distances)
-        except ValueError:
-            return 0,0
+      
+        clossest = min(distances)
         index = distances.index(clossest)
         clossest_food_obj = self.food_places[index]
         clossest_x = clossest_food_obj.x_food
