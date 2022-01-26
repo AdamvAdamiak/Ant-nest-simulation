@@ -3,13 +3,13 @@ import math
 from math import fabs
 
 class Ant:
-    def __init__(self, role, nest, food):
+    def __init__(self,x,y, role, nest, food):
         self.food = food
         self.nest = nest
-        self.x = 0
-        self.y = 0
+        self.x = x
+        self.y = y
         self.speed = 5
-        self.detect_food_radius = 5000
+        self.detect_food_radius = 15
         self.isLeavingNest = role
         self.hasFood = False
         self.FoodAmmount = 0
@@ -26,10 +26,6 @@ class Ant:
 
         if random.randint(0,10000) < 5 or self.DeathTimer == 0:
             self.isDead = True
-
-        if self.x > 64 or self.x < -64 or self.y > 64 or self.y < -64:
-            print('XD?')
-            self.return_to_nest()
 
         if self.isDead == True:
             return 'dead'
@@ -56,18 +52,20 @@ class Ant:
         return 'alive'
 
     def search_food(self):
+        visited = 0
         if self.stickToCord == 0:
             try:
-                self.x_food, self.y_food = self.food.clossest_food(self.x, self.y)
+                self.x_food, self.y_food, visited = self.food.clossest_food(self.x, self.y)
                 self.stickToCord = 25
             except ValueError: 
                 return 'alive'
         self.stickToCord -= 1
         food_cords = (self.x_food, self.y_food)
-        ant_cords = (self.x, self.y)
-
+        ant_cords = (self.x, self.y)            
+        if visited == 1:
+            print('YES')
         # Jeśli wyczuje jedzenie, poruszam sie w jego kierunku
-        if math.dist(ant_cords, food_cords) <= self.detect_food_radius:
+        if math.dist(ant_cords, food_cords) <= self.detect_food_radius or visited == 1:
             previous_dist = math.dist(ant_cords, food_cords)
             new_x = self.x
             new_y = self.y
@@ -121,7 +119,7 @@ class Ant:
             #       math.dist(ant_cords, food_cords))
 
     def grab_food(self, x_food, y_food):
-        taken_food = self.food.take_from(x_food, y_food)
+        taken_food = self.food.take_from(x_food, y_food, self.nest)
         self.FoodAmmount = taken_food
         self.hasFood = True
         return 'alive'
