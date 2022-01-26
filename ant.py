@@ -62,8 +62,6 @@ class Ant:
         self.stickToCord -= 1
         food_cords = (self.x_food, self.y_food)
         ant_cords = (self.x, self.y)            
-        if visited == 1:
-            print('YES')
         # Jeśli wyczuje jedzenie, poruszam sie w jego kierunku
         if math.dist(ant_cords, food_cords) <= self.detect_food_radius or visited == 1:
             previous_dist = math.dist(ant_cords, food_cords)
