@@ -9,7 +9,7 @@ class Ant:
         self.x = x
         self.y = y
         self.speed = 5
-        self.detect_food_radius = 15
+        self.detect_food_radius = 25
         self.isLeavingNest = role
         self.hasFood = False
         self.FoodAmmount = 0
@@ -20,9 +20,9 @@ class Ant:
         self.y_food = 0
 
     def Update(self):
-        if self.isLeavingNest == True:
-            if self.nest.food_stock <= 0:
-                self.DeathTimer -= 1
+        # if self.isLeavingNest == True:
+        #     if self.nest.food_stock <= 0:
+        #         self.DeathTimer -= 1
 
         if random.randint(0,10000) < 5 or self.DeathTimer == 0:
             self.isDead = True

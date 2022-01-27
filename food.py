@@ -7,8 +7,8 @@ class food:
         self.food_places = []
         self.n = n
         for i in range(n):
-            x = random.randint(-64, 64)
-            y = random.randint(-64, 64)
+            x = random.randint(-150,150 )
+            y = random.randint(-150, 150)
             self.food_places.append(food_object(x, y))
 
     def take_from(self, x, y, nest):
@@ -74,7 +74,7 @@ class food_object:
     def __init__(self, x, y):
         self.x_food = x
         self.y_food = y
-        self.stock = random.randint(5, 50)
+        self.stock = random.randint(250, 350)
         self.ants_visited = 0
         self.isEmpty = False
         self.nest_visitors = []
